@@ -3,3 +3,7 @@
 --
 -- See the kickstart.nvim README for more information
 return {}
+  {
+    'renerocksai/telekasten.nvim',
+    dependencies = {'nvim-telescope/telescope.nvim'}
+  },
