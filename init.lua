@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -156,6 +156,11 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+--Markdown Dateien automatischer Zeilenumbruch
+vim.opt.wrap = true
+vim.opt.textwidth = 70
+
+vim.opt.spellfile = vim.fn.stdpath 'config' .. '/spell/de.utf-8.add'
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -215,6 +220,11 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+local words = {}
+for word in io.open(vim.fn.stdpath 'config' .. '/spell/de.utf-8.add', 'r'):lines() do
+  table.insert(words, word)
+end
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -236,7 +246,10 @@ require('lazy').setup({
   --
   -- Use `opts = {}` to force a plugin to be loaded.
   --
-
+  {
+    'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
+  },
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
   --    require('gitsigns').setup({ ... })
@@ -355,7 +368,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font, lazy = false },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -628,7 +641,6 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
-
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -641,6 +653,21 @@ require('lazy').setup({
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
             },
+            ltex = {
+              dictionary = {
+                ['de-DE'] = words,
+              },
+            },
+          },
+        },
+      }
+
+      require('lspconfig')['ltex'].setup {
+        capabilities = capabilities,
+        settings = {
+          ltex = {
+            language = { 'de.De' },
+            disabledRules = { ['en-US'] = { 'PROFANITY' } },
           },
         },
       }
@@ -939,7 +966,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
