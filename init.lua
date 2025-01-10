@@ -595,7 +595,27 @@ require('lazy').setup({
           end
         end,
       })
-
+      -- hook to nvim-lspconfig
+      require('grammar-guard').init()
+      require('lspconfig').grammar_guard.setup {
+        cmd = { 'ltex-ls' }, -- add this if you install ltex-ls yourself
+        settings = {
+          ltex = {
+            enabled = { 'latex', 'tex', 'bib', 'markdown' },
+            language = 'de',
+            diagnosticSeverity = 'information',
+            setenceCacheSize = 2000,
+            additionalRules = {
+              enablePickyRules = true,
+              motherTongue = 'de',
+            },
+            trace = { server = 'verbose' },
+            dictionary = {},
+            disabledRules = {},
+            hiddenFalsePositives = {},
+          },
+        },
+      }
       -- Change diagnostic symbols in the sign column (gutter)
       -- if vim.g.have_nerd_font then
       --   local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
@@ -647,16 +667,6 @@ require('lazy').setup({
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
             },
-          },
-        },
-      }
-
-      require('lspconfig')['ltex'].setup {
-        capabilities = capabilities,
-        settings = {
-          ltex = {
-            language = { 'de.De' },
-            disabledRules = { ['en-US'] = { 'PROFANITY' } },
           },
         },
       }
