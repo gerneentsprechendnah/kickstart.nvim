@@ -160,7 +160,6 @@ vim.opt.scrolloff = 10
 vim.opt.wrap = true
 vim.opt.textwidth = 70
 
-vim.opt.spellfile = vim.fn.stdpath 'config' .. '/spell/de.utf-8.add'
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -219,11 +218,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   end
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
-
-local words = {}
-for word in io.open(vim.fn.stdpath 'config' .. '/spell/de.utf-8.add', 'r'):lines() do
-  table.insert(words, word)
-end
 
 -- [[ Configure and install plugins ]]
 --
@@ -652,11 +646,6 @@ require('lazy').setup({
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
-            },
-            ltex = {
-              dictionary = {
-                ['de-DE'] = words,
-              },
             },
           },
         },
