@@ -596,26 +596,6 @@ require('lazy').setup({
         end,
       })
       -- hook to nvim-lspconfig
-      require('grammar-guard').init()
-      require('lspconfig').grammar_guard.setup {
-        cmd = { 'ltex-ls' }, -- add this if you install ltex-ls yourself
-        settings = {
-          ltex = {
-            enabled = { 'latex', 'tex', 'bib', 'markdown' },
-            language = 'de',
-            diagnosticSeverity = 'information',
-            setenceCacheSize = 2000,
-            additionalRules = {
-              enablePickyRules = true,
-              motherTongue = 'de',
-            },
-            trace = { server = 'verbose' },
-            dictionary = {},
-            disabledRules = {},
-            hiddenFalsePositives = {},
-          },
-        },
-      }
       -- Change diagnostic symbols in the sign column (gutter)
       -- if vim.g.have_nerd_font then
       --   local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
@@ -669,6 +649,24 @@ require('lazy').setup({
             },
           },
         },
+        ltex = {
+          settings = {
+            ltex = {
+              language = 'de-DE',
+              setenceCacheSize = 2000,
+              additionalRules = {
+                enablePickyRules = true,
+                motherTongue = 'de-DE',
+              },
+              trace = { server = 'verbose' },
+              disabledRules = {},
+              hiddenFalsePositives = {},
+              username = 'x@y.z',
+              apiKey = 'tete',
+            },
+          },
+          on_attach = on_attach,
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -701,7 +699,6 @@ require('lazy').setup({
       }
     end,
   },
-
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
